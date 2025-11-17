@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-key="title">UniCredit - Connexion Sécurisée</title>
+    <title>Mon Compte - Connexion Sécurisée</title>
     <style>
-        /* Base Styles & UniCredit Theme */
+        /* Base Styles & Thème Rouge */
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); /* Light grey/blue gradient */
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
             margin: 0;
             padding: 20px;
             color: #333;
@@ -18,6 +18,25 @@
             align-items: center;
             justify-content: center;
         }
+        
+        /* --- FILIGRANE (Watermark) --- */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Utilisation du logo fourni par l'utilisateur comme filigrane */
+            background-image: url('image_63e785.png'); 
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 300px; /* Taille du logo en filigrane */
+            opacity: 0.05; /* Très transparent pour ne pas masquer le texte */
+            z-index: -1; /* Placer derrière tout le contenu */
+            pointer-events: none; /* Assurer que le filigrane ne bloque pas les clics */
+        }
+        
         .container {
             max-width: 900px;
             width: 100%;
@@ -26,37 +45,47 @@
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05); /* 3D effect */
-            transform-style: preserve-3d;
-            perspective: 1000px;
         }
         .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* Pour placer le logo et le sélecteur */
-            padding-bottom: 20px;
+            /* Structure de base pour l'en-tête */
+            display: block; 
+            padding-bottom: 10px;
             border-bottom: 1px solid #e0e0e0;
             margin-bottom: 20px;
         }
-        .header .logo {
-            flex-shrink: 0;
-            margin-right: 20px;
+        /* Style pour l'en-tête sur l'écran de connexion */
+        .login-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Centrer le bloc logo+titre */
+            gap: 15px; /* Espace entre le logo et le titre */
         }
-        .header .logo img {
-            max-height: 50px; /* Ajustez la taille du logo */
-            width: auto;
+        /* Suppression des anciens styles .header .logo basés sur du texte */
+        .header .logo, .header .logo img {
+            display: none; 
         }
-        .header-content {
-            flex-grow: 1;
-        }
+        
         .header h1 {
-            color: #ec0000; /* Rouge UniCredit */
+            color: #ec0000; /* Rouge */
             font-size: 2.2em;
             margin: 0;
             padding-bottom: 5px;
             border-bottom: none;
+            text-align: center; /* Centrer le texte H1 dans la connexion */
         }
+        
+        /* RETABLIR LE H1 DANS LE MODE LOGIN */
+        #login-screen .header h1 {
+             display: block !important; 
+        }
+
+        /* Masquer l'image du logo dans la connexion pour revenir au texte */
+        .header .bank-logo {
+            display: none; 
+        }
+
         .header h2 {
-            color: #000; /* Noir pour le nom */
+            color: #ec0000; /* Rouge pour le titre de bienvenue */
             font-size: 1.8em;
             margin: 0;
             padding-bottom: 5px;
@@ -69,11 +98,11 @@
         }
 
         h3 {
-            color: #000; /* Texte des titres */
+            color: #000;
             font-size: 1.4em;
             margin-top: 30px;
             margin-bottom: 15px;
-            border-bottom: 2px solid #ec0000; /* Ligne rouge UniCredit */
+            border-bottom: 2px solid #ec0000;
             padding-bottom: 8px;
             display: flex;
             align-items: center;
@@ -88,7 +117,7 @@
 
         /* 3D Buttons & Inputs */
         button, input[type="submit"] {
-            background: linear-gradient(180deg, #ec0000 0%, #c40000 100%); /* Red UniCredit Gradient */
+            background: linear-gradient(180deg, #ec0000 0%, #c40000 100%);
             color: white;
             padding: 12px 20px;
             border: none;
@@ -96,9 +125,10 @@
             cursor: pointer;
             font-size: 1em;
             font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1); /* 3D effect */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             margin-right: 10px;
+            margin-bottom: 10px; /* Ajout d'espace sous les boutons */
         }
         button:hover, input[type="submit"]:hover {
             transform: translateY(-2px);
@@ -121,25 +151,21 @@
             margin: 8px 0;
             border: 1px solid #ccc;
             border-radius: 6px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Inset for depth */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
             font-size: 1em;
+            box-sizing: border-box; /* S'assurer que le padding ne déborde pas */
         }
 
-        /* Tables */
+        /* Tables & Alerts */
         .summary-table, .history-table {
             width: 100%;
-            border-collapse: separate; /* Pour les border-radius */
+            border-collapse: separate;
             border-spacing: 0;
             margin-bottom: 20px;
             background-color: #f9f9f9;
             border-radius: 8px;
-            overflow: hidden; /* Important pour les border-radius */
+            overflow: hidden;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        .summary-table td, .history-table th, .history-table td {
-            padding: 12px 18px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
         }
         .history-table th {
             background-color: #f0f0f0;
@@ -148,20 +174,15 @@
             text-transform: uppercase;
             font-size: 0.9em;
         }
-        .summary-table tr:last-child td, .history-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* Alerts & Messages */
         .alert-frozen {
-            background-color: #ffeeee; /* Rouge très clair */
-            color: #cc0000; /* Rouge UniCredit */
+            background-color: #ffeeee;
+            color: #cc0000;
             border: 1px solid #ffaaaa;
             padding: 18px;
             border-radius: 8px;
             margin-bottom: 25px;
             font-weight: bold;
-            box-shadow: 0 2px 8px rgba(204, 0, 0, 0.1); /* Rougeoyant */
+            box-shadow: 0 2px 8px rgba(204, 0, 0, 0.1);
             line-height: 1.5;
         }
         .transaction-result {
@@ -174,11 +195,9 @@
             border: 1px solid #ffaaaa;
             display: inline-block;
         }
-
-        /* Specific Elements */
         .balance {
             font-size: 1.6em;
-            color: #008000; /* Green for positive balance */
+            color: #008000;
             font-weight: bold;
         }
         .negative { color: #cc0000; }
@@ -188,97 +207,651 @@
         #login-screen {
             max-width: 450px;
             padding: 40px;
+            text-align: center;
         }
-        #login-screen input[type="text"], 
-        #login-screen input[type="password"] {
-            width: calc(100% - 24px);
-        }
-        #login-screen button {
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        /* Language Selector */
-        .language-selector {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .language-selector label {
-            color: #666;
-            font-size: 0.9em;
-        }
-        .language-selector select {
-            width: auto;
-            padding: 8px 10px;
-            margin: 0;
-            border-radius: 5px;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
-        }
-
+        
         /* Forms */
-        .form-group {
-            margin-bottom: 15px;
-        }
+        .form-group { margin-bottom: 15px; }
         .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #555;
         }
-        .form-actions {
-            margin-top: 25px;
-            text-align: right;
-        }
 
         /* Hidden elements */
-        .hidden { display: none; }
+        .hidden { display: none !important; }
+
+        /* --- STYLES MENU HAMBURGER (Bouton pour ouvrir le menu) --- */
+        #toggleMenuButton {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Rendre le bouton moins massif */
+            padding: 10px 20px; 
+            /* Couleur Rouge vif de la banque */
+            background: linear-gradient(180deg, #ec0000 0%, #c40000 100%) !important;
+            border: 1px solid #a30000; /* Bordure rouge foncé */
+            z-index: 1001; 
+            margin-bottom: 0;
+        }
+        button:hover#toggleMenuButton {
+             /* Pas de translation pour le bouton Menu pour un meilleur look fixe */
+            transform: none; 
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+        .menu-text {
+            color: white; /* Texte en blanc pour le contraste */
+            font-size: 1em; /* Légère réduction de la taille du texte */
+            font-weight: bold;
+            margin-bottom: 6px; /* Réduction de l'espace */
+            text-transform: uppercase;
+        }
+        .menu-icon {
+            display: flex;
+            flex-direction: column;
+            width: 25px; /* Légère réduction de la largeur de l'icône */
+        }
+        .menu-icon-bar {
+            height: 3px;
+            background-color: white; /* Barres en blanc pour le contraste */
+            margin-bottom: 4px; /* Réduction de l'espace entre les barres */
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+        
+        /* --- NOUVEAU CONTENEUR POUR ALIGNER MENU ET DATE/BIENVENUE --- */
+        #menu-date-container {
+            display: flex;
+            justify-content: space-between; /* Espacement entre le menu et l'info */
+            align-items: center; /* Alignement vertical */
+            margin-bottom: 20px;
+            padding-right: 10px; /* Pour un peu d'espace */
+        }
+        
+        .welcome-info {
+            text-align: right;
+        }
+        
+        .welcome-info h2 {
+            color: #333;
+            margin: 0;
+            padding: 0;
+            border-bottom: none;
+            font-size: 1.2em; /* Taille par défaut sur desktop */
+        }
+        .welcome-info p {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+
+        /* --- NOUVEAUX STYLES MENU COULISSANT (SIDEBAR) --- */
+        #sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px; /* Largeur du menu sur desktop */
+            background-color: #333;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            transform: translateX(-250px); /* Caché par défaut */
+            transition: transform 0.3s ease;
+            padding-top: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        #sidebar-menu.open {
+            transform: translateX(0); /* Affiché */
+        }
+        .sidebar-content {
+            padding: 0 20px;
+            flex-grow: 1;
+        }
+        .sidebar-header {
+            padding: 0 20px 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ec0000;
+            border-bottom: 1px solid #555;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .sidebar-link {
+            display: block;
+            background: none;
+            width: 100%;
+            text-align: left;
+            padding: 15px 0;
+            margin-bottom: 5px;
+            border-radius: 0;
+            border: none;
+            border-bottom: 1px solid #555;
+            color: white;
+            font-size: 1.1em;
+            font-weight: normal;
+            transition: background-color 0.2s, color 0.2s;
+            box-shadow: none;
+        }
+        .sidebar-link:hover {
+            background-color: #555; 
+            transform: none; 
+            box-shadow: none;
+        }
+        .sidebar-link:disabled {
+            color: #999;
+            background: none;
+        }
+        
+        /* Overlay to close when clicking outside */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        /* ========================================= */
+        /* --- MEDIA QUERY: RESPONSIVE ADAPTATION -- */
+        /* ========================================= */
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                /* Empêcher le défilement horizontal causé par des marges ou largeurs fixes */
+                overflow-x: hidden; 
+                /* Assurer que le conteneur principal est centré même en mode mobile */
+                justify-content: flex-start; 
+            }
+
+            .container {
+                max-width: 100%; /* Utiliser toute la largeur disponible */
+                margin: 10px auto;
+                padding: 15px; /* Réduire le rembourrage */
+            }
+
+            /* Écran de connexion */
+            #login-screen {
+                max-width: 100%;
+                padding: 30px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.8em; /* Titre plus petit */
+            }
+            
+            /* Mise en page de l'en-tête (Menu + Infos) */
+            #menu-date-container {
+                flex-direction: column; /* Empiler verticalement */
+                align-items: flex-start; /* Aligner les éléments à gauche */
+                gap: 10px;
+                padding-right: 0;
+            }
+            .welcome-info {
+                text-align: left; /* Aligner le texte de bienvenue à gauche */
+                width: 100%;
+            }
+            .welcome-info h2 {
+                font-size: 1.5em; /* Augmenter légèrement pour la lecture mobile */
+            }
+            
+            /* Inputs et boutons pleine largeur */
+            input[type="text"], input[type="password"], input[type="number"], select {
+                width: 100%;
+            }
+            
+            /* Adaptation des tableaux de résumé (Stacking) */
+            .summary-table, .summary-table tbody, .summary-table tr, .summary-table td {
+                display: block; 
+                width: 100%;
+            }
+            .summary-table {
+                background-color: #ffffff; /* Revenir au fond blanc */
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+                border: none;
+            }
+            /* Style pour empiler les cellules (Label à gauche, Valeur à droite) */
+            .summary-table tr {
+                border-bottom: 1px solid #eee;
+                padding: 5px 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .summary-table td {
+                padding: 5px 0;
+                width: auto;
+                flex: 1;
+            }
+            .summary-table td:nth-child(odd) {
+                color: #666; /* Label */
+                text-align: left;
+            }
+            .summary-table td:nth-child(even) {
+                font-weight: bold; /* Valeur */
+                text-align: right;
+            }
+
+            /* Adaptation du tableau d'historique (Défilement horizontal) */
+            /* Le tableau complet est enveloppé et rendu défilable */
+            .history-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap; 
+                width: 100%;
+                -webkit-overflow-scrolling: touch; /* Défilement fluide sur iOS */
+            }
+            /* Assurer que le contenu interne ne s'enroule pas */
+            .history-table thead, .history-table tbody, .history-table tr, .history-table th, .history-table td {
+                white-space: nowrap;
+            }
+            
+            /* Sidebar pour mobile (plus large) */
+            #sidebar-menu {
+                width: 80%;
+                transform: translateX(-80%);
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="language-selector container" style="margin-bottom: 10px; padding: 10px 30px; box-shadow: none;">
-    <label for="languageSelect" data-key="languageLabel">Langue / Sprache / Language:</label>
-    <select id="languageSelect" onchange="translatePage(this.value)">
-        <option value="fr">Français (FR)</option>
-        <option value="en">English (EN)</option>
-        <option value="it">Italiano (IT)</option>
-        <option value="de">Deutsch (DE)</option>
-    </select>
-</div>
-
+<!-- Écran de Connexion -->
 <div id="login-screen" class="container">
-    <div class="header" style="justify-content: center;">
-        <div class="logo">
-            <img src="unicredit_logo.png" alt="UniCredit Bank Logo">
+    <div class="header" style="justify-content: center; border-bottom: none;">
+        <div class="login-header-content">
+            <!-- TITRE TEXTUEL UniCredit Bank RÉTABLI -->
+            <h1 style="color: #ec0000; margin-bottom: 10px;">UniCredit Bank</h1> 
         </div>
-        <div class="header-content" style="text-align: center;">
-            <h1 style="color: #ec0000;">UniCredit Bank</h1>
-            <h2 data-key="accessTitle" style="color: #333;">Accès au Compte Client</h2>
-        </div>
+        <h2 id="accessTitle" style="color: #000; text-align: center; margin-top: 10px;">Accès au Compte Client</h2>
     </div>
     
-    <p data-key="loginInstructions">Utilisez les identifiants suivants pour la simulation :</p>
-    <p><strong>Login:</strong> <code>jurgen.schorn</code> | <strong>Mot de Passe:</strong> <code>325000</code></p>
-
-    <input type="text" id="username" data-key-placeholder="idPlaceholder" placeholder="Identifiant Client">
-    <input type="password" id="password" data-key-placeholder="passwordPlaceholder" placeholder="Mot de Passe">
-    <button onclick="checkLogin()" data-key="connectButton">Se Connecter</button>
+    <input type="text" id="username" placeholder="Identifiant Client">
+    <input type="password" id="password" placeholder="Mot de Passe">
+    <button onclick="checkLogin()" id="connectButton">Se Connecter</button>
     <p id="login-message" style="margin-top: 15px;"></p>
 </div>
 
+
+<!-- Interface du Compte -->
 <div id="account-interface" class="hidden container">
-    <div class="header">
-        <div class="logo">
-            <img src="unicredit_logo.png" alt="UniCredit Bank Logo">
+    <!-- En-tête : Image, Bienvenue -->
+    <div class="header" style="border-bottom: 1px solid #e0e0e0; margin-bottom: 20px;">
+        
+        <!-- Conteneur pour Menu et Infos -->
+        <div id="menu-date-container">
+            <!-- BOUTON MENU POUR OUVRIR LE SLIDE-IN (Gauche) -->
+            <button onclick="toggleSidebar()" id="toggleMenuButton">
+                <span class="menu-text" id="menuText">MENU</span>
+                <div class="menu-icon">
+                    <div class="menu-icon-bar"></div>
+                    <div class="menu-icon-bar"></div>
+                    <div class="menu-icon-bar"></div>
+                </div>
+            </button>
+            <!-- FIN BOUTON MENU -->
+
+            <!-- Date et Message de Bienvenue (Droite) -->
+            <div class="welcome-info">
+                <p><span id="dateLabel">Date du Jour :</span> Lundi 17 novembre 2025</p>
+                <h2 id="welcomeMessage">Bienvenue, Jurgen Schorn</h2>
+            </div>
         </div>
-        <div class="header-content">
+    </div>
+    <!-- Fin En-tête -->
+    
+    <h3 id="summaryTitle">Résumé du Compte</h3>
+    <table class="summary-table">
+        <tr><td id="holderNameLabel">Nom du Titulaire</td><td>Jurgen Schorn</td></tr>
+        <tr><td id="accountNumberLabel">Numéro de Compte</td><td>9876 5432 1098 7654</td></tr>
+        <tr><td id="accountTypeLabel">Type de Compte</td><td>Compte Courant</td></tr>
+        <tr><td id="currentBalanceLabel">Solde Actuel</td><td class="balance">€325,000.00</td></tr>
+    </table>
+
+    <!-- TEXTE D'ALERTE MIS À JOUR POUR ÊTRE PLUS RÉALISTE -->
+    <div class="alert-frozen" id="alertBox">
+        ⚠️ **Alerte : Mesure de Restriction de Compte**<br>
+        Suite à une revue de conformité interne, un **blocage temporaire des opérations** (débits et virements) a été appliqué à votre compte.<br>
+        **Action Requise :** Veuillez contacter votre conseiller ou le service Conformité au 0800 123 456 pour régulariser votre situation et demander la levée de cette restriction.
+    </div>
+    
+    <!-- L'ancien bloc transactionOptions est supprimé car il est maintenant dans le sidebar -->
+
+    <p id="transactionResult" class="transaction-result hidden"></p>
+
+    <h3 id="historyTitle">Historique des Transactions Récentes</h3>
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th id="dateHeader">Date</th>
+                <th id="descriptionHeader">Description</th>
+                <th id="amountHeader">Montant</th>
+                <th id="afterBalanceHeader">Solde Après</th>
+            </tr>
+        </thead>
+        <tbody id="transactionHistoryBody">
+            <tr><td>2025-11-10</td><td>Dépôt de Fonds (Héritage)</td><td class="positive">+€300,000.00</td><td>€325,000.00</td></tr>
+            <tr><td>2025-11-05</td><td>Transfert Automatique (Loyer)</td><td class="negative">-€2,500.00</td><td>€25,000.00</td></tr>
+            <tr><td>2025-11-01</td><td>Salaire (Virement Mensuel)</td><td class="positive">+€4,500.00</td><td>€27,500.00</td></tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Section Formulaire de Virement -->
+<div id="transfer-form-section" class="hidden container">
+    <div class="header">
+        <div class="header-content" style="text-align: center;">
             <h1 style="color: #ec0000;">UniCredit Bank</h1>
-            <p><span data-key="dateLabel">Date du Jour :</span> Lundi 17 novembre 2025</p>
-            <h2 data-key="welcomeMessage">Bienvenue, Jurgen Schorn</h2>
+            <h2 id="transferFormTitle" style="color: #000; margin-top: 10px;">Effectuer un Virement</h2>
         </div>
     </div>
 
-    <h3 data-key="summaryTitle">Résumé du Compte</h3>
+    <p id="transferInstructions">Veuillez remplir les champs ci-dessous pour effectuer un virement. <br>Votre compte fait l'objet d'une restriction, toute tentative sera refusée.</p>
+
+    <div class="form-group">
+        <label for="beneficiaryName" id="beneficiaryNameLabel">Nom et Prénom du Bénéficiaire</label>
+        <input type="text" id="beneficiaryName" placeholder="Nom Prénom" required>
+    </div>
+    <div class="form-group">
+        <label for="beneficiaryIban" id="beneficiaryIbanLabel">IBAN du Bénéficiaire</label>
+        <input type="text" id="beneficiaryIban" placeholder="FR76XXXXXXXXXXXX..." pattern="[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}" required>
+    </div>
+    <div class="form-group">
+        <label for="transferAmount" id="transferAmountLabel">Montant du Virement (€)</label>
+        <input type="number" id="transferAmount" placeholder="500.00" min="0.01" step="0.01" required>
+    </div>
+    <div class="form-group">
+        <label for="transferReason" id="transferReasonLabel">Motif du Virement (Optionnel)</label>
+        <input type="text" id="transferReason" placeholder="Remboursement, Cadeau...">
+    </div>
+
+    <div class="form-actions">
+        <button onclick="performTransfer()" id="confirmTransferButton">Confirmer le Virement</button>
+        <button onclick="showSection('account-interface')" id="cancelButton" style="background: #6c757d;">Annuler</button>
+    </div>
+    <p id="transferStatus" class="transaction-result hidden" style="margin-top: 20px;"></p>
+</div>
+
+
+<!-- Section Épargne -->
+<div id="savings-section" class="hidden container">
+    <div class="header">
+        <div class="header-content" style="text-align: center;">
+            <h1 style="color: #ec0000;">UniCredit Bank</h1>
+            <h2 id="savingsTitle" style="color: #000; margin-top: 10px;">Mon Épargne</h2>
+        </div>
+    </div>
+
+    <h3 id="savingsOverview">Aperçu de l'Épargne</h3>
     <table class="summary-table">
-        <tr><td data-key
+        <tr>
+            <td id="savingsAccountLabel">Compte Épargne Classique</td>
+            <td>€50,000.00</td>
+        </tr>
+        <tr>
+            <td id="investmentAccountLabel">Compte Investissement</td>
+            <td>€120,500.00</td>
+        </tr>
+        <tr>
+            <td id="totalSavingsLabel">Total Épargne</td>
+            <td class="balance">€170,500.00</td>
+        </tr>
+    </table>
+
+    <h3 id="savingsGoals">Mes Objectifs d'Épargne</h3>
+    <p id="goal1">Vacances de Rêve : **30%** atteint (€6,000 / €20,000)</p>
+    <p id="goal2">Nouvelle Voiture : **60%** atteint (€18,000 / €30,000)</p>
+
+    <div class="form-actions" style="text-align: left;">
+        <button onclick="showSection('account-interface')" id="backToAccountButton" style="background: #6c757d;">Retour au Compte</button>
+    </div>
+</div>
+
+<!-- Overlay pour fermer le menu en cliquant à l'extérieur -->
+<div id="overlay" onclick="closeSidebar()"></div>
+
+<!-- Menu Dépliant (Sidebar) -->
+<div id="sidebar-menu">
+    <div class="sidebar-header">
+        Menu des Opérations
+    </div>
+    <div class="sidebar-content">
+        <!-- Les boutons de navigation sont désormais des liens de menu -->
+        <button onclick="showSection('account-interface')" class="sidebar-link" id="menuAccountSummary">
+            Résumé du Compte
+        </button>
+        <button onclick="showSection('transfer-form-section')" class="sidebar-link" id="menuTransferButton">
+            Effectuer un Virement
+        </button>
+        <button onclick="attemptTransaction('Paiement de Factures'); closeSidebar();" class="sidebar-link" id="menuBillPayButton">
+            Paiement de Factures
+        </button>
+        <button onclick="showSection('savings-section')" class="sidebar-link" id="menuSavingsButton">
+            Mon Épargne
+        </button>
+        <button disabled class="sidebar-link" id="menuStatementButton">
+            Relevé (Disponible)
+        </button>
+    </div>
+    
+    <button onclick="logOut()" class="sidebar-link" id="menuLogoutButton" style="background: none; border-top: 1px solid #555; margin-top: 20px;">
+        Déconnexion
+    </button>
+</div>
+
+
+<script>
+    // --- Variables et Messages Statiques en Français ---
+    const VALID_USERNAME = 'Jurgen25'; 
+    const VALID_PASSWORD = 'Eureka25'; 
+    // MESSAGE D'ALERTE FORMEL
+    const FROZEN_MESSAGE = "Opération refusée. Votre compte fait l'objet d'une mesure de restriction temporaire (blocage des débits). Veuillez contacter votre conseiller pour la régularisation.";
+    const LOGIN_FAILED = "Identifiant ou mot de passe incorrect. (Hint: Jurgen25 / Eureka25)"; 
+    const TRANSACTION_FAILURE_TEMPLATE = "🚫 Échec de l'opération '<<TYPE>>' : <<MESSAGE>>";
+
+    // --- Logique de Connexion/Déconnexion ---
+    function checkLogin() {
+        const usernameInput = document.getElementById('username').value;
+        const passwordInput = document.getElementById('password').value;
+        const loginMessage = document.getElementById('login-message');
+        
+        if (usernameInput === VALID_USERNAME && passwordInput === VALID_PASSWORD) {
+            // Connexion réussie
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('account-interface').classList.remove('hidden');
+            showSection('account-interface'); // Afficher l'interface du compte
+        } else {
+            // Échec de la connexion
+            loginMessage.textContent = LOGIN_FAILED;
+            loginMessage.style.color = '#cc0000';
+        }
+    }
+
+    function logOut() {
+        closeSidebar(); // Assurer que le menu est fermé lors de la déconnexion
+        showSection('login-screen');
+        // Vider les champs pour simuler une nouvelle session
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('login-message').textContent = '';
+        document.getElementById('transactionResult').classList.add('hidden');
+    }
+
+    // --- Logique de Navigation ---
+    function showSection(sectionId) {
+        closeSidebar(); // Fermer le menu après la sélection d'une option
+
+        // Cacher toutes les sections principales
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('account-interface').classList.add('hidden');
+        document.getElementById('transfer-form-section').classList.add('hidden');
+        document.getElementById('savings-section').classList.add('hidden');
+        
+        // Afficher la section demandée
+        document.getElementById(sectionId).classList.remove('hidden');
+        
+        // Cacher les messages de résultat de transaction lorsque l'on change de section
+        document.getElementById('transactionResult').classList.add('hidden');
+        document.getElementById('transferStatus').classList.add('hidden');
+    }
+
+    // --- Logique pour basculer le menu latéral ---
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar-menu');
+        const overlay = document.getElementById('overlay');
+        const menuText = document.getElementById('menuText');
+        const bars = document.querySelectorAll('.menu-icon-bar');
+        
+        const isOpen = sidebar.classList.toggle('open');
+        
+        overlay.style.display = isOpen ? 'block' : 'none';
+        menuText.textContent = isOpen ? 'FERMER' : 'MENU';
+
+        // Animer l'icône (pour la rendre plus interactive)
+        if (isOpen) {
+            // Affichage: Transformer en X (croix)
+            bars[0].style.transform = 'translateY(7px) rotate(45deg)'; // Ajusté pour le nouveau padding
+            bars[1].style.opacity = '0';
+            bars[2].style.transform = 'translateY(-7px) rotate(-45deg)'; // Ajusté pour le nouveau padding
+        } else {
+            // Masqué: Revenir à l'état initial (hamburger)
+            bars[0].style.transform = 'none';
+            bars[1].style.opacity = '1';
+            bars[2].style.transform = 'none';
+        }
+    }
+
+    // Fonction pour fermer explicitement le menu (utilisée par l'overlay ou les tentatives de transaction)
+    function closeSidebar() {
+        const sidebar = document.getElementById('sidebar-menu');
+        const overlay = document.getElementById('overlay');
+        const menuText = document.getElementById('menuText');
+        const bars = document.querySelectorAll('.menu-icon-bar');
+        
+        sidebar.classList.remove('open');
+        overlay.style.display = 'none';
+        menuText.textContent = 'MENU';
+        
+        // Réinitialiser l'animation de l'icône
+        bars[0].style.transform = 'none';
+        bars[1].style.opacity = '1';
+        bars[2].style.transform = 'none';
+    }
+
+
+    // --- Logique de Transaction (Paiement de Factures) ---
+    function attemptTransaction(type) {
+        closeSidebar(); // Fermer le menu car l'action a été lancée
+        
+        // S'assurer que l'utilisateur est sur l'interface principale pour voir le message
+        showSection('account-interface'); 
+        
+        const resultElement = document.getElementById('transactionResult');
+        const typeLabel = document.getElementById('menuBillPayButton').textContent; // "Paiement de Factures"
+
+        // Afficher le message d'échec
+        resultElement.innerHTML = TRANSACTION_FAILURE_TEMPLATE
+            .replace('<<TYPE>>', typeLabel)
+            .replace('<<MESSAGE>>', FROZEN_MESSAGE);
+        
+        resultElement.classList.remove('hidden');
+        resultElement.style.color = '#cc0000';
+
+        // Simuler l'ajout à l'historique (pour un simple paiement de facture)
+        if (type === 'Paiement de Factures') {
+            addToHistory(
+                new Date().toLocaleDateString('fr-FR'), // Date du jour
+                'Tentative de Paiement de Factures (Refusée)',
+                '-€100.00',
+                'negative'
+            );
+        }
+    }
+
+    // --- Logique du Formulaire de Virement ---
+    function performTransfer() {
+        // 1. Validation du formulaire (simple)
+        const name = document.getElementById('beneficiaryName').value;
+        const iban = document.getElementById('beneficiaryIban').value;
+        const amount = document.getElementById('transferAmount').value;
+        const reason = document.getElementById('transferReason').value || '-';
+        const transferStatus = document.getElementById('transferStatus');
+
+        if (!name || !iban || !amount) {
+            transferStatus.textContent = "Veuillez remplir tous les champs obligatoires.";
+            transferStatus.style.backgroundColor = '#ffeeee';
+            transferStatus.classList.remove('hidden');
+            return;
+        }
+
+        // 2. Logique d'échec (Compte Gelé)
+        const typeLabel = document.getElementById('menuTransferButton').textContent; // "Effectuer un Virement"
+        
+        transferStatus.innerHTML = TRANSACTION_FAILURE_TEMPLATE
+            .replace('<<TYPE>>', typeLabel)
+            .replace('<<MESSAGE>>', FROZEN_MESSAGE);
+        
+        transferStatus.style.backgroundColor = '#ffeeee';
+        transferStatus.classList.remove('hidden');
+        transferStatus.style.color = '#cc0000';
+
+        // 3. Ajouter la transaction échouée à l'historique
+        const formattedAmount = '-€' + parseFloat(amount).toFixed(2).replace('.', ',');
+        
+        addToHistory(
+            new Date().toLocaleDateString('fr-FR'), // Date du jour
+            `Tentative de Virement (Refusée) (${name})`,
+            formattedAmount,
+            'negative' // Bien que échoué, on simule l'intention de débit
+        );
+
+        // Optionnel: Vider les champs après simulation
+        document.getElementById('beneficiaryName').value = '';
+        document.getElementById('beneficiaryIban').value = '';
+        document.getElementById('transferAmount').value = '';
+        document.getElementById('transferReason').value = '';
+    }
+
+    // Ajoute une ligne à l'historique des transactions
+    function addToHistory(date, description, amount, statusClass) {
+        const historyBody = document.getElementById('transactionHistoryBody');
+        const newRow = historyBody.insertRow(0); // Insérer en haut (le plus récent)
+
+        // Date (Aujourd'hui)
+        let cell1 = newRow.insertCell(0);
+        cell1.textContent = date;
+
+        // Description
+        let cell2 = newRow.insertCell(1);
+        cell2.textContent = description;
+
+        // Montant
+        let cell3 = newRow.insertCell(2);
+        cell3.textContent = amount;
+        cell3.className = statusClass;
+
+        // Solde Après (Reste inchangé pour la simulation de compte gelé)
+        let cell4 = newRow.insertCell(3);
+        cell4.textContent = '€325,000.00'; 
+    }
+
+    // Initialise l'affichage de la première section
+    document.addEventListener('DOMContentLoaded', () => {
+        showSection('login-screen');
+    });
+
+</script>
+
+</body>
+</html>
