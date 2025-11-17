@@ -173,7 +173,14 @@
             color: #555;
             text-transform: uppercase;
             font-size: 0.9em;
+            padding: 12px 15px;
+            text-align: left;
         }
+         .history-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
         .alert-frozen {
             background-color: #ffeeee;
             color: #cc0000;
@@ -221,6 +228,21 @@
 
         /* Hidden elements */
         .hidden { display: none !important; }
+
+        /* Notification Box (pour les relevés) */
+        #notification-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1002;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s ease-in-out;
+            display: none;
+        }
 
         /* --- STYLES MENU HAMBURGER (Bouton pour ouvrir le menu) --- */
         #toggleMenuButton {
@@ -345,6 +367,7 @@
         .sidebar-link:disabled {
             color: #999;
             background: none;
+            cursor: not-allowed;
         }
         
         /* Overlay to close when clicking outside */
@@ -461,10 +484,20 @@
                 width: 80%;
                 transform: translateX(-80%);
             }
+            
+            /* Ajustement des cellules pour le tableau des relevés en mobile */
+            .statements-table th, .statements-table td {
+                min-width: 120px; /* Assure que les colonnes ne sont pas trop serrées */
+            }
         }
     </style>
 </head>
 <body>
+
+<!-- Notification Box (pour les relevés et messages généraux) -->
+<div id="notification-box" style="background-color: #008000; color: white;">
+    Message de notification...
+</div>
 
 <!-- Écran de Connexion -->
 <div id="login-screen" class="container">
@@ -525,8 +558,6 @@
         **Action Requise :** Veuillez contacter votre conseiller ou le service Conformité au 0800 123 456 pour régulariser votre situation et demander la levée de cette restriction.
     </div>
     
-    <!-- L'ancien bloc transactionOptions est supprimé car il est maintenant dans le sidebar -->
-
     <p id="transactionResult" class="transaction-result hidden"></p>
 
     <h3 id="historyTitle">Historique des Transactions Récentes</h3>
@@ -561,11 +592,12 @@
 
     <div class="form-group">
         <label for="beneficiaryName" id="beneficiaryNameLabel">Nom et Prénom du Bénéficiaire</label>
-        <input type="text" id="beneficiaryName" placeholder="Nom Prénom" required>
+        <input type="text" id="beneficiaryName" placeholder="Mario Rossi" required>
     </div>
     <div class="form-group">
-        <label for="beneficiaryIban" id="beneficiaryIbanLabel">IBAN du Bénéficiaire</label>
-        <input type="text" id="beneficiaryIban" placeholder="FR76XXXXXXXXXXXX..." pattern="[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}" required>
+        <label for="beneficiaryIban" id="beneficiaryIbanLabel">IBAN du Bénéficiaire (Format Italien)</label>
+        <!-- IBAN italien commence par IT. Format: 2 lettres (pays) + 2 chiffres (clé) + 1 lettre (CIN) + 5 chiffres (ABI) + 5 chiffres (CAB) + 12 caractères (compte) -->
+        <input type="text" id="beneficiaryIban" placeholder="IT60X0542832569000000123456" pattern="[A-Z]{2}[0-9]{2}[A-Z][0-9]{10}[A-Z0-9]{12}" required>
     </div>
     <div class="form-group">
         <label for="transferAmount" id="transferAmountLabel">Montant du Virement (€)</label>
@@ -573,7 +605,7 @@
     </div>
     <div class="form-group">
         <label for="transferReason" id="transferReasonLabel">Motif du Virement (Optionnel)</label>
-        <input type="text" id="transferReason" placeholder="Remboursement, Cadeau...">
+        <input type="text" id="transferReason" placeholder="Rimborso, Regalo (Remboursement, Cadeau)...">
     </div>
 
     <div class="form-actions">
@@ -614,9 +646,73 @@
     <p id="goal2">Nouvelle Voiture : **60%** atteint (€18,000 / €30,000)</p>
 
     <div class="form-actions" style="text-align: left;">
-        <button onclick="showSection('account-interface')" id="backToAccountButton" style="background: #6c757d;">Retour au Compte</button>
+        <button onclick="showSection('account-interface')" id="backToAccountButtonSavings" style="background: #6c757d;">Retour au Compte</button>
     </div>
 </div>
+
+
+<!-- Section RELEVÉS DE COMPTE (Nouveau) -->
+<div id="statements-section" class="hidden container">
+    <div class="header">
+        <div class="header-content" style="text-align: center;">
+            <h1 style="color: #ec0000;">UniCredit Bank</h1>
+            <h2 id="statementsTitle" style="color: #000; margin-top: 10px;">Relevés et Documents</h2>
+        </div>
+    </div>
+
+    <h3 id="statementsOverview">Vos Relevés Disponibles (Compte Courant)</h3>
+    
+    <div style="overflow-x: auto; margin-bottom: 20px;">
+        <table class="history-table statements-table" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Date d'Émission</th>
+                    <th>Période</th>
+                    <th style="text-align: right;">Solde Final</th>
+                    <th>Type</th>
+                    <th style="text-align: center;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="statements-body">
+                <tr>
+                    <td>1er nov. 2025</td>
+                    <td>Octobre 2025</td>
+                    <td style="text-align: right;" class="positive">4 215,75 €</td>
+                    <td>Mensuel</td>
+                    <td style="text-align: center;">
+                        <button onclick="handleDownload('Octobre 2025')" style="padding: 6px 12px; font-size: 0.9em; margin: 0;">Télécharger</button>
+                    </td>
+                </tr>
+                 <tr>
+                    <td>1er oct. 2025</td>
+                    <td>Septembre 2025</td>
+                    <td style="text-align: right;" class="positive">4 890,10 €</td>
+                    <td>Mensuel</td>
+                    <td style="text-align: center;">
+                        <button onclick="handleDownload('Septembre 2025')" style="padding: 6px 12px; font-size: 0.9em; margin: 0;">Télécharger</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>1er sept. 2025</td>
+                    <td>Août 2025</td>
+                    <td style="text-align: right;" class="positive">3 550,00 €</td>
+                    <td>Mensuel</td>
+                    <td style="text-align: center;">
+                        <button onclick="handleDownload('Août 2025')" style="padding: 6px 12px; font-size: 0.9em; margin: 0;">Télécharger</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 15px;">
+        <button onclick="requestNewStatement()" style="background: linear-gradient(180deg, #0056b3 0%, #003d7a 100%); margin-right: 15px;">
+             Demander un Nouveau Relevé Personnalisé
+        </button>
+        <button onclick="showSection('account-interface')" id="backToAccountButtonStatements" style="background: #6c757d;">Retour au Compte</button>
+    </div>
+</div>
+
 
 <!-- Overlay pour fermer le menu en cliquant à l'extérieur -->
 <div id="overlay" onclick="closeSidebar()"></div>
@@ -640,7 +736,8 @@
         <button onclick="showSection('savings-section')" class="sidebar-link" id="menuSavingsButton">
             Mon Épargne
         </button>
-        <button disabled class="sidebar-link" id="menuStatementButton">
+        <!-- BOUTON RELEVÉ ACTIF -->
+        <button onclick="showSection('statements-section')" class="sidebar-link" id="menuStatementButton" style="color: #ffcc00; font-weight: bold;">
             Relevé (Disponible)
         </button>
     </div>
@@ -697,6 +794,7 @@
         document.getElementById('account-interface').classList.add('hidden');
         document.getElementById('transfer-form-section').classList.add('hidden');
         document.getElementById('savings-section').classList.add('hidden');
+        document.getElementById('statements-section').classList.add('hidden'); // Nouvelle section
         
         // Afficher la section demandée
         document.getElementById(sectionId).classList.remove('hidden');
@@ -721,9 +819,9 @@
         // Animer l'icône (pour la rendre plus interactive)
         if (isOpen) {
             // Affichage: Transformer en X (croix)
-            bars[0].style.transform = 'translateY(7px) rotate(45deg)'; // Ajusté pour le nouveau padding
+            bars[0].style.transform = 'translateY(7px) rotate(45deg)'; 
             bars[1].style.opacity = '0';
-            bars[2].style.transform = 'translateY(-7px) rotate(-45deg)'; // Ajusté pour le nouveau padding
+            bars[2].style.transform = 'translateY(-7px) rotate(-45deg)'; 
         } else {
             // Masqué: Revenir à l'état initial (hamburger)
             bars[0].style.transform = 'none';
@@ -845,6 +943,59 @@
         let cell4 = newRow.insertCell(3);
         cell4.textContent = '€325,000.00'; 
     }
+    
+    // --- Logique du Relevé de Compte (Nouveau) ---
+    /**
+     * Affiche un message de notification.
+     * @param {string} message Le texte à afficher.
+     * @param {string} type 'success' (vert) ou 'info' (bleu/jaune).
+     */
+    function showNotification(message, type = 'success') {
+        const box = document.getElementById('notification-box');
+        
+        if (type === 'success') {
+            box.style.backgroundColor = '#008000'; // Vert pour succès
+            box.style.color = 'white';
+        } else {
+            box.style.backgroundColor = '#ffcc00'; // Jaune pour info/avertissement
+            box.style.color = '#333';
+        }
+
+        box.innerHTML = message;
+        box.style.opacity = '1';
+        box.style.display = 'block';
+
+        // Masquer la notification après 5 secondes
+        setTimeout(() => {
+            box.style.opacity = '0';
+            // Attendre la fin de la transition avant de masquer
+            setTimeout(() => {
+                box.style.display = 'none';
+            }, 300); 
+        }, 5000);
+    }
+    
+    /**
+     * Simule le téléchargement d'un relevé et affiche un message de succès.
+     * @param {string} period Le mois/période du relevé.
+     */
+    function handleDownload(period) {
+        showNotification(
+            `✅ Téléchargement du relevé de **${period}** initié. Vérifiez votre dossier de téléchargements.`,
+            'success'
+        );
+    }
+
+    /**
+     * Simule la demande de création d'un relevé personnalisé.
+     */
+    function requestNewStatement() {
+        showNotification(
+            `ℹ️ Votre demande de relevé personnalisé est en cours de traitement. Vous recevrez une notification par e-mail dans les 48h.`,
+            'info'
+        );
+    }
+
 
     // Initialise l'affichage de la première section
     document.addEventListener('DOMContentLoaded', () => {
