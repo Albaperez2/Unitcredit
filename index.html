@@ -3,132 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniCredit - Connexion Sécurisée</title>
+    <title data-key="title">UniCredit - Connexion Sécurisée</title>
     <style>
-        /* CSS pour le Thème UniCredit (Bleu/Gris) */
+        /* Base Styles & UniCredit Theme */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f9;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); /* Light grey/blue gradient */
             margin: 0;
             padding: 20px;
             color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         .container {
-            max-width: 800px;
-            margin: auto;
-            background-color: #fff;
+            max-width: 900px;
+            width: 100%;
+            margin: 20px auto;
+            background-color: #ffffff;
             padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2, h3 {
-            color: #0073e6;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 5px;
-            margin-top: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05); /* 3D effect */
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
         .header {
-            text-align: center;
-            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Pour placer le logo et le sélecteur */
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        .header .logo {
+            flex-shrink: 0;
+            margin-right: 20px;
+        }
+        .header .logo img {
+            max-height: 50px; /* Ajustez la taille du logo */
+            width: auto;
+        }
+        .header-content {
+            flex-grow: 1;
         }
         .header h1 {
-            color: #0073e6;
-            border-bottom: none;
+            color: #ec0000; /* Rouge UniCredit */
+            font-size: 2.2em;
             margin: 0;
-            font-size: 2em;
+            padding-bottom: 5px;
+            border-bottom: none;
         }
-        .alert-frozen {
-            background-color: #ffe0e0;
-            color: #cc0000;
-            border: 1px solid #cc0000;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
+        .header h2 {
+            color: #000; /* Noir pour le nom */
+            font-size: 1.8em;
+            margin: 0;
+            padding-bottom: 5px;
+            border-bottom: none;
+        }
+        .header p {
+            color: #666;
+            margin: 5px 0 0;
+            font-size: 0.9em;
+        }
+
+        h3 {
+            color: #000; /* Texte des titres */
+            font-size: 1.4em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ec0000; /* Ligne rouge UniCredit */
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        h3::before {
+            content: '•';
+            color: #ec0000;
+            font-size: 1.5em;
+            line-height: 0;
+            margin-right: 8px;
+        }
+
+        /* 3D Buttons & Inputs */
+        button, input[type="submit"] {
+            background: linear-gradient(180deg, #ec0000 0%, #c40000 100%); /* Red UniCredit Gradient */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
             font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1); /* 3D effect */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-right: 10px;
         }
+        button:hover, input[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+        button:active, input[type="submit"]:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        input[type="text"], input[type="password"], input[type="number"], select {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Inset for depth */
+            font-size: 1em;
+        }
+
+        /* Tables */
         .summary-table, .history-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate; /* Pour les border-radius */
+            border-spacing: 0;
             margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden; /* Important pour les border-radius */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         .summary-table td, .history-table th, .history-table td {
-            padding: 12px;
+            padding: 12px 18px;
             text-align: left;
             border-bottom: 1px solid #eee;
         }
-        .summary-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .balance {
-            font-size: 1.5em;
-            color: #008000;
+        .history-table th {
+            background-color: #f0f0f0;
             font-weight: bold;
+            color: #555;
+            text-transform: uppercase;
+            font-size: 0.9em;
         }
-        .options button {
-            background-color: #0073e6;
-            color: white;
+        .summary-table tr:last-child td, .history-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Alerts & Messages */
+        .alert-frozen {
+            background-color: #ffeeee; /* Rouge très clair */
+            color: #cc0000; /* Rouge UniCredit */
+            border: 1px solid #ffaaaa;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(204, 0, 0, 0.1); /* Rougeoyant */
+            line-height: 1.5;
+        }
+        .transaction-result {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #cc0000;
+            background-color: #ffeeee;
             padding: 10px 15px;
-            margin-right: 10px;
-            border: none;
             border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            border: 1px solid #ffaaaa;
+            display: inline-block;
         }
-        .options button:hover {
-            background-color: #005bb5;
-        }
-        .options button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+
+        /* Specific Elements */
+        .balance {
+            font-size: 1.6em;
+            color: #008000; /* Green for positive balance */
+            font-weight: bold;
         }
         .negative { color: #cc0000; }
         .positive { color: #008000; }
 
-        /* Styles spécifiques au Login */
+        /* Login Screen */
         #login-screen {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            max-width: 450px;
+            padding: 40px;
         }
         #login-screen input[type="text"], 
         #login-screen input[type="password"] {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            width: calc(100% - 24px);
         }
         #login-screen button {
-            width: 90%;
-            padding: 12px;
-            background-color: #0073e6;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
+            width: 100%;
+            margin-top: 20px;
         }
-        #login-message {
-            color: #cc0000;
-            margin-top: 10px;
-        }
-        .hidden {
-            display: none;
-        }
+
+        /* Language Selector */
         .language-selector {
-            text-align: right;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .language-selector label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .language-selector select {
+            width: auto;
+            padding: 8px 10px;
+            margin: 0;
+            border-radius: 5px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Forms */
+        .form-group {
             margin-bottom: 15px;
         }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-actions {
+            margin-top: 25px;
+            text-align: right;
+        }
+
+        /* Hidden elements */
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div class="language-selector">
-    <label for="languageSelect">Langue / Sprache / Language:</label>
+<div class="language-selector container" style="margin-bottom: 10px; padding: 10px 30px; box-shadow: none;">
+    <label for="languageSelect" data-key="languageLabel">Langue / Sprache / Language:</label>
     <select id="languageSelect" onchange="translatePage(this.value)">
         <option value="fr">Français (FR)</option>
         <option value="en">English (EN)</option>
@@ -137,10 +247,15 @@
     </select>
 </div>
 
-<div id="login-screen">
-    <div class="header">
-        <h1>UniCredit</h1>
-        <h2 data-key="accessTitle">Accès au Compte Client</h2>
+<div id="login-screen" class="container">
+    <div class="header" style="justify-content: center;">
+        <div class="logo">
+            <img src="unicredit_logo.png" alt="UniCredit Bank Logo">
+        </div>
+        <div class="header-content" style="text-align: center;">
+            <h1 style="color: #ec0000;">UniCredit Bank</h1>
+            <h2 data-key="accessTitle" style="color: #333;">Accès au Compte Client</h2>
+        </div>
     </div>
     
     <p data-key="loginInstructions">Utilisez les identifiants suivants pour la simulation :</p>
@@ -149,311 +264,21 @@
     <input type="text" id="username" data-key-placeholder="idPlaceholder" placeholder="Identifiant Client">
     <input type="password" id="password" data-key-placeholder="passwordPlaceholder" placeholder="Mot de Passe">
     <button onclick="checkLogin()" data-key="connectButton">Se Connecter</button>
-    <p id="login-message"></p>
+    <p id="login-message" style="margin-top: 15px;"></p>
 </div>
 
 <div id="account-interface" class="hidden container">
     <div class="header">
-        <h1>UniCredit</h1>
-        <p><span data-key="dateLabel">Date du Jour :</span> Lundi 17 novembre 2025</p>
-        <h2 data-key="welcomeMessage">Bienvenue, Jurgen Schorn</h2>
+        <div class="logo">
+            <img src="unicredit_logo.png" alt="UniCredit Bank Logo">
+        </div>
+        <div class="header-content">
+            <h1 style="color: #ec0000;">UniCredit Bank</h1>
+            <p><span data-key="dateLabel">Date du Jour :</span> Lundi 17 novembre 2025</p>
+            <h2 data-key="welcomeMessage">Bienvenue, Jurgen Schorn</h2>
+        </div>
     </div>
 
     <h3 data-key="summaryTitle">Résumé du Compte</h3>
     <table class="summary-table">
-        <tr><td data-key="holderNameLabel">Nom du Titulaire</td><td>Jurgen Schorn</td></tr>
-        <tr><td data-key="accountNumberLabel">Numéro de Compte</td><td>9876 5432 1098 7654</td></tr>
-        <tr><td data-key="accountTypeLabel">Type de Compte</td><td>Compte Courant</td></tr>
-        <tr><td data-key="currentBalanceLabel">Solde Actuel</td><td class="balance">€325,000.00</td></tr>
-    </table>
-
-    <div class="alert-frozen" id="alertBox">
-        <span data-key="frozenStatus">⚠️ **Statut du Compte : COMPTE GELÉ**</span><br>
-        <span data-key="frozenMessage">Votre compte est gelé pour non respect des règles de notre institution. Veuillez vous acquitter de votre pénalité avant toute transaction.</span>
-    </div>
-
-    <h3 data-key="optionsTitle">Options de Transaction Rapide</h3>
-    <div class="options">
-        <button onclick="attemptTransaction('Virement')" data-key="transferButton">Virement</button>
-        <button onclick="attemptTransaction('Paiement de Factures')" data-key="billPayButton">Paiement de Factures</button>
-        <button disabled data-key="statementButton">Relevé (Disponible)</button>
-        <button disabled data-key="savingsButton">Voir mon Épargne (Disponible)</button>
-    </div>
-    
-    <p id="transactionResult" style="margin-top: 15px; font-weight: bold;"></p>
-
-    <h3 data-key="historyTitle">Historique des Transactions Récentes</h3>
-    <table class="history-table">
-        <thead>
-            <tr>
-                <th data-key="dateHeader">Date</th>
-                <th data-key="descriptionHeader">Description</th>
-                <th data-key="amountHeader">Montant</th>
-                <th data-key="afterBalanceHeader">Solde Après</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>2025-11-10</td><td data-key="desc_deposit">Dépôt de Fonds (Héritage)</td><td class="positive">+€300,000.00</td><td>€325,000.00</td></tr>
-            <tr><td>2025-11-05</td><td data-key="desc_rent">Transfert Automatique (Loyer)</td><td class="negative">-€2,500.00</td><td>€25,000.00</td></tr>
-            <tr><td>2025-11-01</td><td data-key="desc_salary">Salaire (Virement Mensuel)</td><td class="positive">+€4,500.00</td><td>€27,500.00</td></tr>
-        </tbody>
-    </table>
-</div>
-
-<script>
-    // --- Dictionnaire de Traduction ---
-    const translations = {
-        fr: {
-            // Login Screen
-            accessTitle: "Accès au Compte Client",
-            loginInstructions: "Utilisez les identifiants suivants pour la simulation :",
-            idPlaceholder: "Identifiant Client",
-            passwordPlaceholder: "Mot de Passe",
-            connectButton: "Se Connecter",
-            loginFailed: "Identifiant ou mot de passe incorrect.",
-            
-            // Account Interface
-            welcomeMessage: "Bienvenue, Jurgen Schorn",
-            dateLabel: "Date du Jour :",
-            summaryTitle: "Résumé du Compte",
-            holderNameLabel: "Nom du Titulaire",
-            accountNumberLabel: "Numéro de Compte",
-            accountTypeLabel: "Type de Compte",
-            currentBalanceLabel: "Solde Actuel",
-            
-            // Frozen Status
-            frozenStatus: "⚠️ **Statut du Compte : COMPTE GELÉ**",
-            frozenMessage: "Votre compte est gelé pour non respect des règles de notre institution. Veuillez vous acquitter de votre pénalité avant toute transaction.",
-            
-            // Options
-            optionsTitle: "Options de Transaction Rapide",
-            transferButton: "Virement",
-            billPayButton: "Paiement de Factures",
-            statementButton: "Relevé (Disponible)",
-            savingsButton: "Voir mon Épargne (Disponible)",
-            
-            // History
-            historyTitle: "Historique des Transactions Récentes",
-            dateHeader: "Date",
-            descriptionHeader: "Description",
-            amountHeader: "Montant",
-            afterBalanceHeader: "Solde Après",
-            desc_deposit: "Dépôt de Fonds (Héritage)",
-            desc_rent: "Transfert Automatique (Loyer)",
-            desc_salary: "Salaire (Virement Mensuel)",
-            
-            // Transaction Failure
-            transactionFailure: "🚫 Échec de l'opération '<<TYPE>>' : <<MESSAGE>>"
-        },
-        en: {
-            accessTitle: "Client Account Access",
-            loginInstructions: "Use the following credentials for the simulation:",
-            idPlaceholder: "Client ID",
-            passwordPlaceholder: "Password",
-            connectButton: "Log In",
-            loginFailed: "Incorrect username or password.",
-            
-            welcomeMessage: "Welcome, Jurgen Schorn",
-            dateLabel: "Today's Date:",
-            summaryTitle: "Account Summary",
-            holderNameLabel: "Account Holder Name",
-            accountNumberLabel: "Account Number",
-            accountTypeLabel: "Account Type",
-            currentBalanceLabel: "Current Balance",
-            
-            frozenStatus: "⚠️ **Account Status: ACCOUNT FROZEN**",
-            frozenMessage: "Your account is frozen due to non-compliance with our institution's rules. Please settle your penalty before any transaction.",
-            
-            optionsTitle: "Quick Transaction Options",
-            transferButton: "Transfer",
-            billPayButton: "Bill Payment",
-            statementButton: "Statement (Available)",
-            savingsButton: "View Savings (Available)",
-            
-            historyTitle: "Recent Transaction History",
-            dateHeader: "Date",
-            descriptionHeader: "Description",
-            amountHeader: "Amount",
-            afterBalanceHeader: "Balance After",
-            desc_deposit: "Fund Deposit (Inheritance)",
-            desc_rent: "Automatic Transfer (Rent)",
-            desc_salary: "Salary (Monthly Transfer)",
-            
-            transactionFailure: "🚫 Operation '<<TYPE>>' Failed: <<MESSAGE>>"
-        },
-        it: {
-            accessTitle: "Accesso Conto Cliente",
-            loginInstructions: "Utilizza le seguenti credenziali per la simulazione:",
-            idPlaceholder: "ID Cliente",
-            passwordPlaceholder: "Password",
-            connectButton: "Accedi",
-            loginFailed: "Nome utente o password errati.",
-
-            welcomeMessage: "Benvenuto, Jurgen Schorn",
-            dateLabel: "Data Odierna:",
-            summaryTitle: "Riepilogo Conto",
-            holderNameLabel: "Nome Titolare Conto",
-            accountNumberLabel: "Numero Conto",
-            accountTypeLabel: "Tipo di Conto",
-            currentBalanceLabel: "Saldo Attuale",
-
-            frozenStatus: "⚠️ **Stato Conto: CONTO BLOCCATO**",
-            frozenMessage: "Il tuo conto è bloccato per mancato rispetto delle regole della nostra istituzione. Si prega di pagare la penale prima di qualsiasi transazione.",
-
-            optionsTitle: "Opzioni Transazione Rapida",
-            transferButton: "Bonifico",
-            billPayButton: "Pagamento Fatture",
-            statementButton: "Estratto Conto (Disponibile)",
-            savingsButton: "Visualizza Risparmi (Disponibile)",
-
-            historyTitle: "Cronologia Transazioni Recenti",
-            dateHeader: "Data",
-            descriptionHeader: "Descrizione",
-            amountHeader: "Importo",
-            afterBalanceHeader: "Saldo Dopo",
-            desc_deposit: "Deposito Fondi (Eredità)",
-            desc_rent: "Trasferimento Automatico (Affitto)",
-            desc_salary: "Stipendio (Trasferimento Mensile)",
-            
-            transactionFailure: "🚫 Operazione '<<TYPE>>' Fallita: <<MESSAGE>>"
-        },
-        de: {
-            accessTitle: "Kundenkontozugang",
-            loginInstructions: "Verwenden Sie die folgenden Anmeldedaten für die Simulation:",
-            idPlaceholder: "Kunden-ID",
-            passwordPlaceholder: "Passwort",
-            connectButton: "Anmelden",
-            loginFailed: "Falscher Benutzername oder Passwort.",
-
-            welcomeMessage: "Willkommen, Jurgen Schorn",
-            dateLabel: "Heutiges Datum:",
-            summaryTitle: "Kontoübersicht",
-            holderNameLabel: "Kontoinhaber Name",
-            accountNumberLabel: "Kontonummer",
-            accountTypeLabel: "Kontotyp",
-            currentBalanceLabel: "Aktueller Saldo",
-
-            frozenStatus: "⚠️ **Kontostatus: KONTO GESPERRT**",
-            frozenMessage: "Ihr Konto ist wegen Nichteinhaltung der Vorschriften unseres Instituts gesperrt. Bitte zahlen Sie Ihre Strafe vor jeder Transaktion.",
-
-            optionsTitle: "Schnelle Transaktionsoptionen",
-            transferButton: "Überweisung",
-            billPayButton: "Rechnungszahlung",
-            statementButton: "Kontoauszug (Verfügbar)",
-            savingsButton: "Sparmodus anzeigen (Verfügbar)",
-
-            historyTitle: "Letzte Transaktionshistorie",
-            dateHeader: "Datum",
-            descriptionHeader: "Beschreibung",
-            amountHeader: "Betrag",
-            afterBalanceHeader: "Saldo danach",
-            desc_deposit: "Geldeinzahlung (Erbe)",
-            desc_rent: "Automatische Überweisung (Miete)",
-            desc_salary: "Gehalt (monatliche Überweisung)",
-            
-            transactionFailure: "🚫 Vorgang '<<TYPE>>' Fehlgeschlagen: <<MESSAGE>>"
-        }
-    };
-
-    // --- Fonction de Traduction ---
-    function translatePage(lang) {
-        const currentLang = translations[lang];
-        if (!currentLang) return;
-
-        // 1. Traduire les éléments basés sur 'data-key'
-        document.querySelectorAll('[data-key]').forEach(element => {
-            const key = element.getAttribute('data-key');
-            if (currentLang[key]) {
-                element.textContent = currentLang[key].replace(/\*\*/g, ''); // Enlève le Markdown pour le remplacement
-            }
-        });
-
-        // 2. Traduire les placeholders
-        document.querySelectorAll('[data-key-placeholder]').forEach(element => {
-            const key = element.getAttribute('data-key-placeholder');
-            if (currentLang[key]) {
-                element.placeholder = currentLang[key];
-            }
-        });
-        
-        // 3. Cas spécial pour le statut gelé qui contient du Markdown (gras)
-        const frozenStatusElement = document.querySelector('[data-key="frozenStatus"]');
-        if (frozenStatusElement) {
-            frozenStatusElement.innerHTML = currentLang.frozenStatus;
-        }
-        
-        // 4. Mettre à jour les libellés de transaction si l'interface est affichée
-        if (!document.getElementById('account-interface').classList.contains('hidden')) {
-            updateTransactionFailureMessage(lang);
-        }
-    }
-    
-    // --- Met à jour le message d'échec de transaction après traduction ---
-    function updateTransactionFailureMessage(lang) {
-        const resultElement = document.getElementById('transactionResult');
-        if (resultElement.textContent) {
-            // S'assure que le message d'échec est dans la nouvelle langue
-            const frozenMessage = translations[lang].frozenMessage;
-            const originalType = resultElement.getAttribute('data-operation-type'); // Stocke le type original
-            
-            if (originalType) {
-                const translatedType = translations[lang][originalType + 'Button'] || originalType;
-                resultElement.innerHTML = translations[lang].transactionFailure
-                    .replace('<<TYPE>>', translatedType)
-                    .replace('<<MESSAGE>>', frozenMessage);
-            }
-        }
-    }
-
-
-    // --- Logique de Connexion ---
-    const VALID_USERNAME = 'jurgen.schorn';
-    const VALID_PASSWORD = '325000';
-
-    function checkLogin() {
-        const usernameInput = document.getElementById('username').value;
-        const passwordInput = document.getElementById('password').value;
-        const loginMessage = document.getElementById('login-message');
-        const lang = document.getElementById('languageSelect').value;
-        
-        if (usernameInput === VALID_USERNAME && passwordInput === VALID_PASSWORD) {
-            // Connexion réussie : afficher l'interface du compte
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('account-interface').classList.remove('hidden');
-            translatePage(lang); // S'assure que l'interface s'affiche dans la bonne langue
-        } else {
-            // Échec de la connexion
-            loginMessage.textContent = translations[lang].loginFailed;
-            loginMessage.style.color = '#cc0000';
-        }
-    }
-
-    // --- Logique de Transaction ---
-    function attemptTransaction(type) {
-        const resultElement = document.getElementById('transactionResult');
-        const alertBox = document.getElementById('alertBox');
-        const lang = document.getElementById('languageSelect').value;
-        
-        resultElement.style.color = '#cc0000';
-        
-        // Stocke le type de bouton pour la traduction
-        const buttonKey = type.replace(/\s/g, ''); // Supprime les espaces pour correspondre aux clés (ex: "Virement")
-        resultElement.setAttribute('data-operation-type', buttonKey);
-
-        const translatedType = translations[lang][buttonKey + 'Button'] || type;
-        const failureMessage = translations[lang].frozenMessage;
-        
-        resultElement.innerHTML = translations[lang].transactionFailure
-            .replace('<<TYPE>>', translatedType)
-            .replace('<<MESSAGE>>', failureMessage);
-    }
-    
-    // Initialise la page en Français (FR) au chargement
-    document.addEventListener('DOMContentLoaded', () => {
-        translatePage('fr');
-    });
-
-</script>
-
-</body>
-</html>
+        <tr><td data-key
